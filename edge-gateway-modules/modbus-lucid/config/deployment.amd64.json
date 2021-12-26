@@ -1,0 +1,99 @@
+{
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.1",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": "",
+            "registryCredentials": {
+              "<YOUR_ACR_REGISTRY_NAME>": {
+                "username": "<YOUR_ACR_REGISTRY_NAME>",
+                "password": "<YOUR_ACR_REGISTRY_PASSWORD>",
+                "address": "<YOUR_ACR_REGISTRY_NAME>.azurecr.io"
+              }
+            }
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.2",
+              "createOptions": "{}"
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.2",
+              "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}],\"443/tcp\":[{\"HostPort\":\"443\"}]}}}"
+            }
+          }
+        },
+        "modules": {
+          "modbus_register": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "<YOUR_ACR_REGISTRY_NAME>/modbus_register:0.0.1-amd64",
+              "createOptions": "{\"HostConfig\":{\"Mounts\":[{\"Type\":\"bind\",\"Source\":\"/etc/certs\",\"Target\":\"/certs\",\"Mode\":\"ro\",\"RW\":false,\"Propagation\":\"rprivate\"}]}}"
+            },
+            "env": {
+              "dpsEnrollmentGroupSaskey": {
+                "value": "<YOUR_APP_NON_EDGE_ENROLLMENT_GROUP_KEY>"
+              },
+              "dpsScopeId": {
+                "value": "<YOUR_APP_ID_SCOPE>"
+              },
+              "modelId": {
+                "value": "dtmi:dummy:opcuaclient;1"
+              }
+            }
+          },
+          "modbus_crud": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "<YOUR_ACR_REGISTRY_NAME>/modbus_crud:0.0.1-amd64",
+              "createOptions": "{\"HostConfig\":{\"Mounts\":[{\"Type\":\"bind\",\"Source\":\"/etc/certs\",\"Target\":\"/certs\",\"RW\":true,\"Propagation\":\"rprivate\"}]}}"
+            },
+            "env": {
+              "opaque": {
+                "value": "false"
+              }
+            }
+          }
+        }
+      }
+    },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.2",
+        "routes": {
+          "register_to_iothub": "FROM /messages/modules/modbus_register/outputs/* INTO $upstream",
+          "crud_to_register": "FROM /messages/modules/modbus_crud/outputs/output1 INTO BrokeredEndpoint(\"/modules/modbus_register/inputs/input1\")"
+        },
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    },
+    "modbus_register": {
+      "properties.desired": {}
+    },
+    "modbus_crud": {
+      "properties.desired": {
+        "publishInterval": 500
+      }
+    }
+  }
+}
