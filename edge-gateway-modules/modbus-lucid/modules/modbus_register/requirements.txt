@@ -1,0 +1,4 @@
+pyserial
+pymodbus
+asyncio
+azure-iot-device
