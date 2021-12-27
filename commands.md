@@ -8,7 +8,7 @@ First, verify that you can see **"model-less command"** feature in your IoT Cent
     - refersh the page
     - verify **Command** is accessible under **Manage device** tab
 
-    ![Azure IoT Edge VM](/assets/19_model_less_command.png)
+    [<img src=./assets/15_model_less_command.png heigth="60%" width="60%">](/assets/15_model_less_command.png)
 
 Using _"model-less command"_ you can send the following commands to IoT Edge Gateway module **"modbus_crud"** to handle modbus CRUD operations:
 - **connect**: Connect to modbus server(s) once the modbus server(s) accessible
