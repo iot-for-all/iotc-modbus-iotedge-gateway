@@ -107,21 +107,48 @@ To do base64 encoding the secrets value you might want to execute some thing lik
     import json
     import base64
 
-    secrets = {}
-    secrets["client"] = {}
-    secrets["client"]["type"] = "cert"
-    secrets["client"]["cert"] = {}
-    secrets["client"]["cert"]["public"] = "<YOUR_PUBLIC_PEM_CONTENT>"
-    secrets["client"]["cert"]["private"] = "<YOUR_PRIVATE_PEM_CONTENT>"
+    payloads = []
+    payloads.append({
+        "serverId": "<YOUR_DEVICE_ID>",
+        "host": "<YOUR_MODBUS_SERVER_IPADDRESS>",
+        "port": "<YOUR_MODBUS_SERVER_PORT>",
+        "secrets": {
+            "client": {
+                "type": "sas",
+                "sas": {
+                    "key": "<YOUR_MODBUS_CLIENT_SASKEY>"
+                }
+            }
+        }
+    })
 
-    secretsStr = json.dumps(secrets, separators=(',', ':'))
-    b64Encoded = base64.b64encode(secretsStr.encode('utf-8'))
-    secretsEncodedDecod = b64Encoded.decode("utf-8")
+    payloads.append({
+        "serverId": "<YOUR_DEVICE_ID>",
+        "host": "<YOUR_MODBUS_SERVER_IPADDRESS>",
+        "port": "<YOUR_MODBUS_SERVER_PORT>",
+        "secrets": {
+            "client": {
+                "type": "cert",
+                "cert": {
+                    "public": """<YOUR_PUBLIC_PEM_CONTENT>""",
+                    "private": """<YOUR_PRIVATE_PEM_CONTENT>"""
+                }
+            }
+        }
+    })
 
-    config = {}
-    config["serverId"] = "<YOUR_DEVICE_ID>"
-    config["host"] = "<YOUR_MODBUS_SERVER_IPADDRESS>"
-    config["port"] = "<YOUR_MODBUS_SERVER_PORT>"
-    config["secrets"] = secretsEncodedDecod
-    print("{}".format(config))
+    for payload in payloads:
+        secrets = payload.get("secrets")
+        if secrets:
+            secretsStr = json.dumps(secrets, separators=(',', ':'))
+            b64Encoded1 = base64.b64encode(secretsStr.encode('utf-8'))
+            payload["secrets"] = b64Encoded1.decode("utf-8")
+
+    print(">")
+    print(">")
+    print(">")
+    print("-" * 100)
+    print("{}".format(json.dumps(payloads)))
+    print("-" * 100)
+
 ```
