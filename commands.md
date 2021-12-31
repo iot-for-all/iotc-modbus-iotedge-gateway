@@ -22,49 +22,49 @@ Executing commands, you need to fill up the following areas:
 - **Module name**: use IoT Edge Gateway module **"modbus_crud"**
 - **Payload**: provide an array of structure defined below:
 ``` ts
-        {
-            serverId: string;                               // Unique value serves as dictiobary key and also as deviceId in Lucid pattern
-            host: string;                                   // modbus server ipaddress
-            port: string;                                   // modbus server port
-            modelId?: string;                               // Used in Lucid pattern for provisioning child device
-            publishInterval?: number;                       // modbus client publish events interval. default to desired property publishInterval
-            filter?: {                                      // Applying filter on modbus nodes
-                action: 'include' | 'exclude' | 'reset';
-                nodes?: string[];                           // No need to specify if you're using reset action
+{
+    serverId: string;                               // Unique value serves as dictiobary key and as deviceId in Lucid pattern
+    host: string;                                   // modbus server ipaddress
+    port: string;                                   // modbus server port
+    modelId?: string;                               // Used in Lucid pattern for provisioning child device
+    publishInterval?: number;                       // Publish events interval. default to desired property publishInterval
+    filter?: {                                      // Applying filter on modbus nodes
+        action: 'include' | 'exclude' | 'reset';
+        nodes?: string[];                           // No need to specify if you're using reset action
+    };
+    secrets?: {                                     // Value should be base64 encoded prior to use in command's payload
+        server?: {                                  // Defines secrets to be used to connect to the modbus server
+            type: 'pwd' | 'sas' | 'cert';
+            pwd?: {                                 // Required if type is pwd
+                user: string;
+                pwd: string;
             };
-            secrets?: {                                     // Value needs to be base64 encoded prior to paste in command's payload
-                server?: {                                  // Server section is to define secrets to be used to connect to the modbus server
-                    type: 'pwd' | 'sas' | 'cert';
-                    pwd?: {                                 // Required if type is pwd
-                        user: string;
-                        pwd: string;
-                    };
-                    sas?: {                                 // Required if type is sas
-                        key: string;
-                    };
-                    cert?: {                                // Required if type is cert
-                        thumbprint?: string;
-                        public: string;                     // Content of public PEM file
-                        private: string;                    // Content of private PEM file
-                    };
-                };
-                client?: {                                  // Client section is to be used for provisioning child device
-                    type: 'sas' | 'cert' | 'tpm';
-                    tpm?: {                                 // Required if type is tpm
-                        endorsementKey?: string;            // Required if storageRootKey not specified
-                        storageRootKey?: string;            // Required if endorsementKey not specified
-                    };
-                    sas?: {                                 // Required if type is sas
-                        key: string;
-                    };
-                    cert?: {                                // Required if type is cert
-                        thumbprint?: string;
-                        public: string;                     // Content of public PEM file
-                        private: string;                    // Content of private PEM file
-                    };
-                };
+            sas?: {                                 // Required if type is sas
+                key: string;
             };
-        }[];
+            cert?: {                                // Required if type is cert
+                thumbprint?: string;
+                public: string;                     // Content of public PEM file
+                private: string;                    // Content of private PEM file
+            };
+        };
+        client?: {                                  // Client section is to be used for provisioning child device
+            type: 'sas' | 'cert' | 'tpm';
+            tpm?: {                                 // Required if type is tpm
+                endorsementKey?: string;            // Required if storageRootKey not specified
+                storageRootKey?: string;            // Required if endorsementKey not specified
+            };
+            sas?: {                                 // Required if type is sas
+                key: string;
+            };
+            cert?: {                                // Required if type is cert
+                thumbprint?: string;
+                public: string;                     // Content of public PEM file
+                private: string;                    // Content of private PEM file
+            };
+        };
+    };
+}[];
 ```
 
 To do base64 encoding the secrets value you might want to execute some thing like following python script:
