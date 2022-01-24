@@ -28,18 +28,22 @@
 	- Open port 5020 for modbus client/server to connect and communicate if it's not open
 		``` shell
 			# Open port 5020 for modbus client to connect
+			# Rule priority, between 100 (highest priority) and 4096 (lowest priority). Must be unique for each rule in the collection.
 			az vm open-port \
 				--port 5020 \
 				--resource-group <YOUR_RESOURCE_GROUP_NAME> \
-				--name <YOUR_VM_NAME>
+				--name <YOUR_VM_NAME> \
+				--priority <RULE_PRIORITY>
 		```
 	- Open port 3389 for RDP connection if it's not open
 		``` shell
 			# Open port 3389 for RDP connection (Remote Desktop)
+			# Rule priority, between 100 (highest priority) and 4096 (lowest priority). Must be unique for each rule in the collection.
 			az vm open-port \
 				--port 3389 \
 				--resource-group <YOUR_RESOURCE_GROUP_NAME> \
-				--name <YOUR_VM_NAME>
+				--name <YOUR_VM_NAME> \
+				--priority <RULE_PRIORITY>
 		```
 	[<img src=../assets/18_sim_server_ports.png heigth="60%" width="60%">](../assets/18_sim_server_ports.png)
 4. Connect to the Windows Virtual Machine using publicIpAddress returned in the output from your VM
