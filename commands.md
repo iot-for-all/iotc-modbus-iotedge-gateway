@@ -11,10 +11,19 @@ First, verify that you can see **"model-less command"** feature in your IoT Cent
     [<img src=./assets/15_model_less_command.png heigth="60%" width="60%">](/assets/15_model_less_command.png)
 
 Using _"model-less command"_ you can send the following commands to IoT Edge Gateway module **"modbus_crud"** to handle modbus CRUD operations:
-- **connect**: Connect to modbus server(s) once the modbus server(s) accessible
-- **disconnect**: Disconnect from modbus server(s)
-- **pubInterval**: Modify the modbus client publish events interval
-- **filter**: Apply filter on modbus nodes specifying the node(s) to _"include"_, _"exclude"_, or _"reset"_ the filter
+- **connect**: Connect to modbus server(s) once the modbus server(s) accessible <br />
+&nbsp;&nbsp;&nbsp;&nbsp;payload examples:<br />
+    - _"[{"serverId": "<SERVER_ID>", "host": "<YOUR_MODBUS_SERVER_HOST>", "port": "<YOUR_MODBUS_SERVER_PORT>"]"_<br />
+    - _"[{"serverId": "<SERVER_ID>", "host": "<YOUR_MODBUS_SERVER_URL>", "port": "<YOUR_MODBUS_SERVER_PORT>", "secrets": "<YOUR_B64_ENCODED_SECRETS>}]"_<br />
+- **disconnect**: Disconnect from modbus server(s)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;payload example: _"[{"serverId": "<SERVER_ID>"}]"_
+- **pubInterval**: Modify the modbus client publish events interval in millisecond<br />
+&nbsp;&nbsp;&nbsp;&nbsp;payload example: _"[{"serverId": "<SERVER_ID>", "publishInterval": <PUB_INTERVAL_MS>}]"_
+- **filter**: Apply filter on modbus nodes specifying the node(s) to _"include"_, _"exclude"_, or _"reset"_ the filter<br />
+&nbsp;&nbsp;&nbsp;&nbsp;payload examples:<br />
+    - _"[{"serverId": "<SERVER_ID>", "filter": { "action": "include", "nodes": ["<NODE_ID>", "<NODE_ID>"]}}]"_<br />
+    - _"[{"serverId": "<SERVER_ID>", "filter": { "action": "exclude", "nodes": ["<NODE_ID>", "<NODE_ID>"]}}]"_<br />
+    - _"[{"serverId": "<SERVER_ID>", "filter": { "action": "reset"}}]"_<br />
 - **config**: Sends telemetry message containing modbus server(s) nodeid list
 
 Executing commands, you need to fill up the following areas:
